@@ -18,16 +18,19 @@ def get_reviews(api_key):
 def get_polling(api_key):
     url = 'https://dvmn.org/api/long_polling/'
     headers = {'Authorization': f'Token {api_key}'}
-    response = requests.get(
-        url, 
-        headers=headers
-        )
-    response.raise_for_status()
-    return response.json()
+    while True:
+        response = requests.get(
+            url, 
+            headers=headers,
+            timeout=60
+            )
+        response.raise_for_status()
+        pprint(response.json())
 
 
 if __name__ == '__main__':
     load_dotenv()
     api_key = os.getenv('DVMN_API_KEY')
-    polling = get_polling(api_key)
-    pprint(polling)
+    # polling = 
+    get_polling(api_key)
+    # pprint(polling)
