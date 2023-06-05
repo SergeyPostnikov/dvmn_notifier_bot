@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 import os
 import requests
 from pprint import pprint
+from requests.exceptions import ReadTimeout, ConnectionError
+from time import sleep
 
 
 def get_reviews(api_key):
@@ -28,9 +30,21 @@ def get_polling(api_key):
         pprint(response.json())
 
 
-if __name__ == '__main__':
+def main():
     load_dotenv()
     api_key = os.getenv('DVMN_API_KEY')
-    # polling = 
-    get_polling(api_key)
-    # pprint(polling)
+    
+    try:
+        get_polling(api_key)
+    except ReadTimeout:
+        print('Polling time eceeded')
+    except ConnectionError as err:
+        for n in range(3):
+            sleep(30)
+            if n <= 3: 
+                get_polling(api_key)
+            else:
+                print(err)
+
+
+main()
