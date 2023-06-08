@@ -41,7 +41,6 @@ async def send_message(bot, tg_user_id, response):
         chat_id=tg_user_id,
         parse_mode='html'
     )
-    print(message_text)
 
 
 async def main():
