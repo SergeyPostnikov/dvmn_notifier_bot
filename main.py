@@ -1,37 +1,12 @@
 from dotenv import load_dotenv
 import os
-import requests
 from pprint import pprint
 from requests.exceptions import ReadTimeout, ConnectionError
 from time import sleep
+from dvmn_handlers import get_polling
 
 
-def get_reviews(api_key):
-    url = 'https://dvmn.org/api/user_reviews/'
-    headers = {'Authorization': f'Token {api_key}'}
-    response = requests.get(
-        url,
-        headers=headers,
-    )
-    response.raise_for_status()
-    return response.json()
-
-
-def get_polling(api_key, last_attempt_timestamp):
-    url = 'https://dvmn.org/api/long_polling/'
-    headers = {'Authorization': f'Token {api_key}'}
-    payload = {'timestamp': last_attempt_timestamp}
-    response = requests.get(
-        url,
-        headers=headers,
-        params=payload,
-        timeout=91
-    )
-    response.raise_for_status()
-    return response.json()
-
-
-def main():
+if __name__ == '__main__':
     load_dotenv()
     api_key = os.getenv('DVMN_API_KEY')
     last_attempt_timestamp = None
@@ -54,6 +29,3 @@ def main():
                     pprint(response)
                 else:
                     print(err)
-
-
-main()
