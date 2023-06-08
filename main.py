@@ -2,9 +2,23 @@ from dotenv import load_dotenv
 import os
 from requests.exceptions import ReadTimeout, ConnectionError
 from time import sleep
-from dvmn_handlers import get_polling
 import asyncio
 import telegram
+import requests
+
+
+def get_check(api_key, last_attempt_timestamp):
+    url = 'https://dvmn.org/api/long_polling/'
+    headers = {'Authorization': f'Token {api_key}'}
+    payload = {'timestamp': last_attempt_timestamp}
+    response = requests.get(
+        url,
+        headers=headers,
+        params=payload,
+        timeout=91
+    )
+    response.raise_for_status()
+    return response.json()
 
 
 async def get_message(response):
@@ -40,20 +54,20 @@ async def main():
     last_attempt_timestamp = None
     while True:
         try:
-            response = get_polling(api_key, last_attempt_timestamp)
+            response = get_check(api_key, last_attempt_timestamp)
             if response["status"] == "timeout":
                 last_attempt_timestamp = response["timestamp_to_request"]
             else:
                 await send_message(bot, tg_user_id, response)
                 last_attempt_timestamp = response["last_attempt_timestamp"]
-                response = get_polling(api_key, last_attempt_timestamp)
+                response = get_check(api_key, last_attempt_timestamp)
         except ReadTimeout:
             print('Polling time exceeded')
         except ConnectionError as err:
             for n in range(3):
                 sleep(30)
                 if n <= 3:
-                    response = get_polling(api_key, last_attempt_timestamp)
+                    response = get_check(api_key, last_attempt_timestamp)
                     await send_message(bot, tg_user_id, response)
                 else:
                     print(err)
