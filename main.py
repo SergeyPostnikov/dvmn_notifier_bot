@@ -34,15 +34,6 @@ async def get_message(response):
     return message
 
 
-async def send_message(bot, tg_user_id, response):
-    message_text = await get_message(response)
-    await bot.send_message(
-        text=message_text,
-        chat_id=tg_user_id,
-        parse_mode='html'
-    )
-
-
 async def main(api_key, tg_user_id, last_attempt_timestamp, bot):
     while True:
         try:
@@ -50,19 +41,19 @@ async def main(api_key, tg_user_id, last_attempt_timestamp, bot):
             if response["status"] == "timeout":
                 last_attempt_timestamp = response["timestamp_to_request"]
             else:
-                await send_message(bot, tg_user_id, response)
+                message_text = await get_message(response)
+                await bot.send_message(
+                    text=message_text,
+                    chat_id=tg_user_id,
+                    parse_mode='html'
+                )
                 last_attempt_timestamp = response["last_attempt_timestamp"]
                 response = get_check(api_key, last_attempt_timestamp)
         except ReadTimeout:
-            print('Polling time exceeded')
-        except ConnectionError as err:
-            for n in range(3):
-                sleep(30)
-                if n <= 3:
-                    response = get_check(api_key, last_attempt_timestamp)
-                    await send_message(bot, tg_user_id, response)
-                else:
-                    print(err)
+            pass
+        except ConnectionError:
+            sleep(30)
+
 
 if __name__ == '__main__':
     load_dotenv()
