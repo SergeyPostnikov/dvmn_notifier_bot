@@ -43,14 +43,7 @@ async def send_message(bot, tg_user_id, response):
     )
 
 
-async def main():
-    load_dotenv()
-    api_key = os.getenv('DVMN_API_KEY')
-    tg_user_id = os.getenv('TG_USER_ID')
-    tg_token = os.getenv('TG_BOT_KEY')
-    bot = telegram.Bot(token=tg_token)
-
-    last_attempt_timestamp = None
+async def main(api_key, tg_user_id, last_attempt_timestamp, bot):
     while True:
         try:
             response = get_check(api_key, last_attempt_timestamp)
@@ -71,5 +64,13 @@ async def main():
                 else:
                     print(err)
 
+if __name__ == '__main__':
+    load_dotenv()
+    api_key = os.getenv('DVMN_API_KEY')
+    tg_user_id = os.getenv('TG_USER_ID')
+    tg_token = os.getenv('TG_BOT_KEY')
+    bot = telegram.Bot(token=tg_token)
 
-asyncio.run(main())
+    last_attempt_timestamp = None
+
+    asyncio.run(main(api_key, tg_user_id, last_attempt_timestamp, bot))
