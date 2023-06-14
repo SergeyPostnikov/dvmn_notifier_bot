@@ -34,7 +34,7 @@ async def get_message(response):
     return message
 
 
-async def main(api_key, tg_user_id, last_attempt_timestamp, bot):
+async def do_poll(api_key, tg_user_id, last_attempt_timestamp, bot):
     while True:
         try:
             response = get_check(api_key, last_attempt_timestamp)
@@ -64,4 +64,4 @@ if __name__ == '__main__':
 
     last_attempt_timestamp = None
 
-    asyncio.run(main(api_key, tg_user_id, last_attempt_timestamp, bot))
+    asyncio.run(do_poll(api_key, tg_user_id, last_attempt_timestamp, bot))
