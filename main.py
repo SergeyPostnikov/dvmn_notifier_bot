@@ -37,12 +37,12 @@ async def get_message(response):
 async def do_poll(api_key, tg_user_id, last_attempt_timestamp, bot):
     while True:
         try:
-            response = get_check(api_key, last_attempt_timestamp)
-            if response["status"] == "timeout":
-                last_attempt_timestamp = response["timestamp_to_request"]
+            check = get_check(api_key, last_attempt_timestamp)
+            if check["status"] == "timeout":
+                last_attempt_timestamp = check["timestamp_to_request"]
             else:
-                message_text = await get_message(response)
-                last_attempt_timestamp = response["last_attempt_timestamp"]
+                message_text = await get_message(check)
+                last_attempt_timestamp = check["last_attempt_timestamp"]
                 await bot.send_message(
                     text=message_text,
                     chat_id=tg_user_id,
