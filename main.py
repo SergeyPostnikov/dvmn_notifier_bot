@@ -42,13 +42,12 @@ async def do_poll(api_key, tg_user_id, last_attempt_timestamp, bot):
                 last_attempt_timestamp = response["timestamp_to_request"]
             else:
                 message_text = await get_message(response)
+                last_attempt_timestamp = response["last_attempt_timestamp"]
                 await bot.send_message(
                     text=message_text,
                     chat_id=tg_user_id,
                     parse_mode='html'
                 )
-                last_attempt_timestamp = response["last_attempt_timestamp"]
-                response = get_check(api_key, last_attempt_timestamp)
         except ReadTimeout:
             pass
         except ConnectionError:
