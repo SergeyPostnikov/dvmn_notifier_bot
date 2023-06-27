@@ -21,7 +21,7 @@ def get_check(api_key, last_attempt_timestamp):
     return response.json()
 
 
-async def get_message(response):
+def get_message(response):
     attempt = response['new_attempts'][0]
     title = attempt['lesson_title']
     link = attempt['lesson_url']
