@@ -5,6 +5,7 @@ from time import sleep
 import asyncio
 import telegram
 import requests
+import logging
 
 
 def get_check(api_key, last_attempt_timestamp):
@@ -41,21 +42,24 @@ async def do_poll(api_key, tg_user_id, last_attempt_timestamp, bot):
             if check["status"] == "timeout":
                 last_attempt_timestamp = check["timestamp_to_request"]
             else:
-                message_text = await get_message(check)
+                message_text = get_message(check)
                 last_attempt_timestamp = check["last_attempt_timestamp"]
                 await bot.send_message(
                     text=message_text,
                     chat_id=tg_user_id,
                     parse_mode='html'
                 )
+                logging.info('Update sent to user')
         except ReadTimeout:
             pass
-        except ConnectionError:
+        except ConnectionError as err:
+            logging.warning(err)
             sleep(30)
 
 
 if __name__ == '__main__':
     load_dotenv()
+    logging.basicConfig(level=logging.DEBUG)
     api_key = os.getenv('DVMN_API_KEY')
     tg_user_id = os.getenv('TG_USER_ID')
     tg_token = os.getenv('TG_BOT_KEY')
