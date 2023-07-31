@@ -8,6 +8,17 @@ import requests
 import logging
 
 
+class TelegramLogsHandler(logging.Handler):
+    def __init__(self, tg_bot, chat_id):
+        super().__init__()
+        self.chat_id = chat_id
+        self.tg_bot = tg_bot
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
+
+
 def get_check(api_key, last_attempt_timestamp):
     url = 'https://dvmn.org/api/long_polling/'
     headers = {'Authorization': f'Token {api_key}'}
@@ -59,11 +70,18 @@ async def do_poll(api_key, tg_user_id, last_attempt_timestamp, bot):
 
 if __name__ == '__main__':
     load_dotenv()
-    logging.basicConfig(level=logging.DEBUG)
+
     api_key = os.getenv('DVMN_API_KEY')
     tg_user_id = os.getenv('TG_USER_ID')
+    tg_admin_id = os.getenv('TG_ADMIN_ID')
     tg_token = os.getenv('TG_BOT_KEY')
+
     bot = telegram.Bot(token=tg_token)
+
+    logger = logging.getLogger('devman_notifier_bot_logger')
+    logging.basicConfig(level=logging.DEBUG)
+    logger.addHandler(TelegramLogsHandler(bot, tg_admin_id))
+    logger.info('Bot started')
 
     last_attempt_timestamp = None
 
