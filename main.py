@@ -2,7 +2,6 @@ from dotenv import load_dotenv
 import os
 from requests.exceptions import ReadTimeout, ConnectionError
 from time import sleep
-import asyncio
 import telegram
 import requests
 import logging
@@ -46,7 +45,7 @@ def get_message(response):
     return message
 
 
-async def do_poll(api_key, tg_user_id, last_attempt_timestamp, bot):
+def do_poll(api_key, tg_user_id, last_attempt_timestamp, bot):
     while True:
         try:
             check = get_check(api_key, last_attempt_timestamp)
@@ -55,7 +54,7 @@ async def do_poll(api_key, tg_user_id, last_attempt_timestamp, bot):
             else:
                 message_text = get_message(check)
                 last_attempt_timestamp = check["last_attempt_timestamp"]
-                await bot.send_message(
+                bot.send_message(
                     text=message_text,
                     chat_id=tg_user_id,
                     parse_mode='html'
@@ -64,8 +63,10 @@ async def do_poll(api_key, tg_user_id, last_attempt_timestamp, bot):
         except ReadTimeout:
             pass
         except ConnectionError as err:
-            logging.warning(err)
+            logger.warning(err)
             sleep(30)
+        except Exception as err:
+            logger.error(f'Bot failed with error: {err}')
 
 
 if __name__ == '__main__':
@@ -85,4 +86,4 @@ if __name__ == '__main__':
 
     last_attempt_timestamp = None
 
-    asyncio.run(do_poll(api_key, tg_user_id, last_attempt_timestamp, bot))
+    do_poll(api_key, tg_user_id, last_attempt_timestamp, bot)
