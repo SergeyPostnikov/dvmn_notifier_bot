@@ -12,14 +12,21 @@ Create your Telegram Bot via [BotFather](https://telegram.me/BotFather) and get 
 
 Get your **Devman Authorization token** on [devman API website](https://dvmn.org/api/docs/).
 
-As a result of the steps above you will have 3 config vars:
+As a result of the steps above you will have 3-5 config vars:
 
 ```
 DVMN_API_KEY - your devman api key  
-TG_BOT_KEY - your bot api key
+NOTIFIER_BOT_KEY - your bot api key
+LOGGER_BOT_KEY - your logger bot api key
 TG_USER_ID - your telegram id
+TG_ADMIN_ID - id whome to sent logs of your bot
+
 ```
 save them in .env file
+
+small notice:  
+you could use same TG_ADMIN_ID and TG_USER_ID then all info will be in one profile.  
+you could use same NOTIFIER_BOT_KEY and LOGGER_BOT_KEY then all info will be in one chat. 
 
 ### Requirements
 for work you had to have `python3`
