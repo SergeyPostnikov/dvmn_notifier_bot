@@ -76,15 +76,16 @@ if __name__ == '__main__':
     api_key = os.getenv('DVMN_API_KEY')
     tg_user_id = os.getenv('TG_USER_ID')
     tg_admin_id = os.getenv('TG_ADMIN_ID')
-    tg_token = os.getenv('TG_BOT_KEY')
+    notifier_bot_token = os.getenv('TG_BOT_KEY')
 
-    bot = telegram.Bot(token=tg_token)
+    notifier_bot = telegram.Bot(token=notifier_bot_token)
+    logger_bot = telegram.Bot(token=logger_bot_token)
 
     logger = logging.getLogger('devman_notifier_bot_logger')
     logger.setLevel(logging.DEBUG)
-    logger.addHandler(TelegramLogsHandler(bot, tg_admin_id))
+    logger.addHandler(TelegramLogsHandler(logger_bot, tg_admin_id))
     logger.info('Bot started')
 
     last_attempt_timestamp = None
 
-    do_poll(api_key, tg_user_id, last_attempt_timestamp, bot)
+    do_poll(api_key, tg_user_id, last_attempt_timestamp, notifier_bot)
