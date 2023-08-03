@@ -66,7 +66,8 @@ def do_poll(api_key, tg_user_id, last_attempt_timestamp, bot):
             logger.warning(err)
             sleep(30)
         except Exception as err:
-            logger.error(f'Bot failed with error: {err}')
+            logger.error('Bot failed with error: ')
+            logger.error(err, exc_info=True)
 
 
 if __name__ == '__main__':
@@ -80,7 +81,7 @@ if __name__ == '__main__':
     bot = telegram.Bot(token=tg_token)
 
     logger = logging.getLogger('devman_notifier_bot_logger')
-    logging.basicConfig(level=logging.DEBUG)
+    logger.setLevel(logging.DEBUG)
     logger.addHandler(TelegramLogsHandler(bot, tg_admin_id))
     logger.info('Bot started')
 
