@@ -28,6 +28,7 @@ small notice:
 you could use same TG_ADMIN_ID and TG_USER_ID then all info will be in one profile.  
 you could use same NOTIFIER_BOT_KEY and LOGGER_BOT_KEY then all info will be in one chat. 
 
+## Run locally on pc
 ### Requirements
 for work you had to have `python3`
 
@@ -44,3 +45,20 @@ pip install -r requirements.txt
 ```
 python3 main.py
 ```
+
+## Running with Docker
+The project contains a Dockerfile that allows you to create an image and container for the project.
+Docker must be installed and running.
+
+To create the image, use `docker build` with the image name specified using `-t`:
+```
+docker build . -t notification_bot
+```
+
+To create the container, use docker run with the container name specified using --name and the path to the .env file specified using --env-file:
+```
+docker run --name notification_bot --env-file=./.env -it notification_bot
+```
+
+After the container with the bot is created, it will be launched and ready to work.
+
