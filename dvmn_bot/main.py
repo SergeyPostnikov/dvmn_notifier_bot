@@ -66,11 +66,11 @@ def do_poll(api_key, tg_user_id, last_attempt_timestamp, bot):
         except ReadTimeout:
             pass
         except ConnectionError as err:
-            logger.warning(err)
+            logging.exception(err)
             sleep(30)
         except Exception as err:
-            logger.error('Bot failed with error: ')
-            logger.error(err, exc_info=True)
+            logging.exception('Bot failed with error: ')
+            logging.exception(err, exc_info=True)
 
 
 if __name__ == '__main__':
@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     notifier_bot = telegram.Bot(token=notifier_bot_token)
     logger_bot = telegram.Bot(token=logger_bot_token)
-    
+
     logging.basicConfig(level=logging.ERROR)
     logger.setLevel(logging.DEBUG)
     logger.addHandler(TelegramLogsHandler(logger_bot, tg_admin_id))
