@@ -7,6 +7,9 @@ import requests
 import logging
 
 
+logger = logging.getLogger(__file__)
+
+
 class TelegramLogsHandler(logging.Handler):
     def __init__(self, tg_bot, chat_id):
         super().__init__()
@@ -81,8 +84,8 @@ if __name__ == '__main__':
 
     notifier_bot = telegram.Bot(token=notifier_bot_token)
     logger_bot = telegram.Bot(token=logger_bot_token)
-
-    logger = logging.getLogger('devman_notifier_bot_logger')
+    
+    logging.basicConfig(level=logging.ERROR)
     logger.setLevel(logging.DEBUG)
     logger.addHandler(TelegramLogsHandler(logger_bot, tg_admin_id))
     logger.info('Bot started')
