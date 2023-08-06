@@ -40,11 +40,11 @@ def get_message(response):
     title = attempt['lesson_title']
     link = attempt['lesson_url']
     is_negative = (attempt['is_negative'] == "False")
-    message = \
-        f'Your lesson <a href="{link}">"{title}"</a> \
-        was valdated with result - ' + \
-        ' "approved"' * is_negative +\
-        ' "not approved"' * (not is_negative)
+    message = f"Your lesson <a href='{link}'>'{title}'</a> was"
+    if is_negative:
+        message += ' "not approved"'
+    else:
+        message += ' "approved"'
     return message
 
 
