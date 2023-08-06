@@ -43,6 +43,7 @@ pip install -r requirements.txt
 ### Activate your bot
 
 ```
+cd dvmn_bot
 python3 main.py
 ```
 
