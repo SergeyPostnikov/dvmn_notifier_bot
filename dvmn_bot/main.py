@@ -70,7 +70,7 @@ def do_poll(api_key, tg_user_id, last_attempt_timestamp, bot):
             sleep(30)
         except Exception as err:
             logging.exception('Bot failed with error: ')
-            logging.exception(err, exc_info=True)
+            logging.exception(err)
 
 
 if __name__ == '__main__':
